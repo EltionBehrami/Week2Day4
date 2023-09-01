@@ -18,9 +18,25 @@ end
 
 # Write a method, most_frequent_bigram, that takes in a string and returns the
 # two adjacent letters that appear the most in the string.
-def most_frequent_bigram(str)
-  
+def most_frequent_bigram(string)
+    bigram_freq = {}
+    string = string.downcase
+
+    (0..string.length - 2).each do |i|
+      bigram = string[i..i+1]
+
+      if bigram_freq.key?(bigram)
+        bigram_freq[bigram] += 1
+      else
+        bigram_freq[bigram] = 1
+      end
+    end
+
+  most_frequent_bigram = bigram_freq.max_by { |bigram, count| count }
+  most_frequent_bigram[0]
 end
+
+
 
 
 class Hash
@@ -60,7 +76,7 @@ class Array
   # Write a method, Array#bubble_sort, that takes in an optional proc argument.
   # When given a proc, the method should sort the array according to the proc.
   # When no proc is given, the method should sort the array in increasing order.
-  #
+  
   # Sorting algorithms like bubble_sort commonly accept a block. That block
   # accepts two parameters, which represents the two elements in the array being
   # compared. If the block returns 1, it means that the second element passed to
@@ -68,9 +84,22 @@ class Array
   # block returns -1, it means the first element passed to the block should go
   # before the second (i.e., do not switch them). If the block returns 0 it
   # implies that it does not matter which element goes first (i.e., do nothing).
-  #
+  
   # This should remind you of the spaceship operator! Convenient :)
   def bubble_sort(&prc)
+    prc ||= Proc.new {|a, b| a <=> b}
     
+    sorted = false
+    until sorted 
+      sorted = true 
+
+      (0...length-1).each do |i|
+        if prc.call(self[i], self[i + 1]) == 1
+          self[i], self[i + 1] = self[i + 1], self[i]
+          sorted = false
+        end 
+      end 
+    end 
+    self 
   end
 end
